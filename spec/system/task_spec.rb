@@ -2,18 +2,18 @@ require 'rails_helper'
 
 RSpec.describe 'Task', type: :system do
   describe 'Task一覧' do
+    let(:project) {create(:project)}
+    let(:task) {create(:task, project_id: project.id)}
     context '正常系' do
-      it '一覧ページにアクセスした場合、Taskが表示されること' do
+      fit '一覧ページにアクセスした場合、Taskが表示されること' do
         # TODO: ローカル変数ではなく let を使用してください
-        project = FactoryBot.create(:project)
-        task = FactoryBot.create(:task, project_id: project.id)
         visit project_tasks_path(project)
         expect(page).to have_content task.title
         expect(Task.count).to eq 1
         expect(current_path).to eq project_tasks_path(project)
       end
 
-      fit 'Project詳細からTask一覧ページにアクセスした場合、Taskが表示されること' do
+      it 'Project詳細からTask一覧ページにアクセスした場合、Taskが表示されること' do
         # FIXME: テストが失敗するので修正してください
         project = FactoryBot.create(:project)
         task = FactoryBot.create(:task, project_id: project.id)
@@ -21,9 +21,6 @@ RSpec.describe 'Task', type: :system do
         click_link 'View Todos'
         windows = page.driver.browser.window_handles
         page.driver.browser.switch_to.window(windows.last)
-        debugger
-
-        # debugger
         expect(page).to have_content task.title
         expect(Task.count).to eq 1
         expect(current_path).to eq project_tasks_path(project)
