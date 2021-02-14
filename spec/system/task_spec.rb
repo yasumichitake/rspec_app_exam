@@ -70,28 +70,33 @@ RSpec.describe 'Task', type: :system do
         expect(find('.task_list')).to have_content(short_time(Time.current))
         expect(current_path).to eq project_tasks_path(project)
       end
-      let(:project) {create(:project)}
-      let(:task) {create(:task, project_id: project.id)}
-      it 'ステータスを完了にした場合、Taskの完了日に今日の日付が登録されること' do
-        # TODO: ローカル変数ではなく let を使用してください
-        visit edit_project_task_path(project, task)
-        select 'done', from: 'Status'
-        click_button 'Update Task'
-        expect(page).to have_content('done')
-        expect(page).to have_content(Time.current.strftime('%Y-%m-%d'))
-        expect(current_path).to eq project_task_path(project, task)
+      context 'ステータス完了前' do
+        let(:project) {create(:project)}
+        let(:task) {create(:task, project_id: project.id)}
+        it 'ステータスを完了にした場合、Taskの完了日に今日の日付が登録されること' do
+          # TODO: ローカル変数ではなく let を使用してください
+          visit edit_project_task_path(project, task)
+          select 'done', from: 'Status'
+          click_button 'Update Task'
+          expect(page).to have_content('done')
+          expect(page).to have_content(Time.current.strftime('%Y-%m-%d'))
+          expect(current_path).to eq project_task_path(project, task)
+        end
       end
-
-      let(:project) {create(:project)}
-      let(:task) {create(:task, :done, project_id: project.id)}
-      it '既にステータスが完了のタスクのステータスを変更した場合、Taskの完了日が更新されないこと' do
-        # TODO: FactoryBotのtraitを利用してください
-        visit edit_project_task_path(project, task)
-        select 'todo', from: 'Status'
-        click_button 'Update Task'
-        expect(page).to have_content('todo')
-        expect(page).not_to have_content(Time.current.strftime('%Y-%m-%d'))
-        expect(current_path).to eq project_task_path(project, task)
+      context 'ステータス完了後' do
+        let(:project) {create(:project)}
+        let(:task) {create(:task, :done, project_id: project.id)}
+        it '既にステータスが完了のタスクのステータスを変更した場合、Taskの完了日が更新されないこと' do
+          # TODO: FactoryBotのtraitを利用してください
+          # project = FactoryBot.create(:project)
+          # task = FactoryBot.create(:task, project_id: project.id, status: :done, completion_date: Time.current.yesterday)
+          visit edit_project_task_path(project, task)
+          select 'todo', from: 'Status'
+          click_button 'Update Task'
+          expect(page).to have_content('todo')
+          expect(page).not_to have_content(Time.current.strftime('%Y-%m-%d'))
+          expect(current_path).to eq project_task_path(project, task)
+        end
       end
     end
   end
