@@ -41,8 +41,6 @@ RSpec.describe 'Task', type: :system do
   end
 
   describe 'Task詳細' do
-    let(:project) {create(:project)}
-    let(:task) {create(:task, project_id: project.id)}
     context '正常系' do
       it 'Taskが表示されること' do
         # TODO: ローカル変数ではなく let を使用してください
