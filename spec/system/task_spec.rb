@@ -78,8 +78,6 @@ RSpec.describe 'Task', type: :system do
         end
       end
       context 'ステータス完了後' do
-        let(:project) {create(:project)}
-        let(:task) {create(:task, :done, project_id: project.id)}
         it '既にステータスが完了のタスクのステータスを変更した場合、Taskの完了日が更新されないこと' do
           # TODO: FactoryBotのtraitを利用してください
           # project = FactoryBot.create(:project)
