@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Task', type: :system do
   let(:project) {create(:project)}
+  let(:task) {create(:task, project_id: project.id)}
   describe 'Task一覧' do
-    let(:task) {create(:task, project_id: project.id)}
     context '正常系' do
       it '一覧ページにアクセスした場合、Taskが表示されること' do
         # TODO: ローカル変数ではなく let を使用してください
